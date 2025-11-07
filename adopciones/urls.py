@@ -22,5 +22,10 @@ urlpatterns = [
     path('adopciones/nueva/', views.adopcion_create, name='adopcion_create'),
     path('adopciones/eliminar/<int:id>/', views.adopcion_delete, name='adopcion_delete'),
 
+    path('ongs/', views.ong_list, name='ong_list'),
+    path('ongs/nueva/', views.ong_create, name='ong_create'),
+    path('ongs/editar/<int:id>/', views.ong_update, name='ong_update'),
+    path('ongs/eliminar/<int:id>/', views.ong_delete, name='ong_delete'),
+
     path('reportes/', views.reportes, name='reportes'),
 ]

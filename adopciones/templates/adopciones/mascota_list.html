@@ -1,50 +1,74 @@
 {% extends 'adopciones/base.html' %}
 {% block content %}
-<h1>Mascotas</h1>
-<a class="btn btn-primary mb-3" href="{% url 'mascota_create' %}">Nueva</a>
-<table class="table table-striped table-hover align-middle">
-  <thead class="table-light">
-    <tr>
-      <th>Foto</th>
-      <th>Nombre</th>
-      <th>Especie</th>
-      <th>Raza</th>
-      <th>Edad</th>
-      <th>Descripción</th>
-      <th>Estado</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for m in mascotas %}
-    <tr>
-      <td>
-        {% if m.foto %}
-        <img src="{{ m.foto.url }}" alt="{{ m.nombre }}" style="width:60px; height:60px; object-fit:cover; border-radius:5px;">
-        {% else %}
-        N/A
-        {% endif %}
-      </td>
-      <td>{{ m.nombre }}</td>
-      <td>{{ m.especie }}</td>
-      <td>{{ m.raza }}</td>
-      <td>{{ m.edad }}</td>
-      <td>{{ m.descripcion|truncatewords:10 }}</td>
-      <td>
-        {% if m.adoptada %}
-          <span class="badge bg-success">Adoptada</span>
-        {% else %}
-          <span class="badge bg-warning text-dark">Disponible</span>
-        {% endif %}
-      </td>
-      <td>
-        <a class="btn btn-sm btn-secondary" href="{% url 'mascota_update' m.id %}">Editar</a>
-        <a class="btn btn-sm btn-danger" href="{% url 'mascota_delete' m.id %}">Eliminar</a>
-      </td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="8">No hay mascotas.</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-primary mb-0">Gestión de Mascotas</h2>
+    <a class="btn btn-primary shadow-sm px-4" href="{% url 'mascota_create' %}">
+      <i class="bi bi-plus-circle me-1"></i> Nueva Mascota
+    </a>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
+      <table class="table table-hover align-middle text-center">
+        <thead class="table-primary">
+          <tr>
+            <th>Foto</th>
+            <th>Nombre</th>
+            <th>Especie</th>
+            <th>Raza</th>
+            <th>Edad</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in mascotas %}
+          <tr>
+            <td>
+              {% if m.foto %}
+              <img src="{{ m.foto.url }}" alt="{{ m.nombre }}"
+                   class="rounded-circle border border-2 border-light shadow-sm"
+                   style="width:60px; height:60px; object-fit:cover;">
+              {% else %}
+              <span class="text-muted">Sin foto</span>
+              {% endif %}
+            </td>
+            <td class="fw-semibold">{{ m.nombre }}</td>
+            <td>{{ m.especie }}</td>
+            <td>{{ m.raza }}</td>
+            <td>{{ m.edad }}</td>
+            <td>{{ m.descripcion|truncatewords:8 }}</td>
+            <td>
+              {% if m.adoptada %}
+                <span class="badge bg-success px-3 py-2">Adoptada</span>
+              {% else %}
+                <span class="badge bg-warning text-dark px-3 py-2">Disponible</span>
+              {% endif %}
+            </td>
+            <td>
+              <div class="btn-group" role="group">
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'mascota_update' m.id %}">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'mascota_delete' m.id %}">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="8" class="text-muted py-4">No hay mascotas registradas.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Iconos de Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 {% endblock %}

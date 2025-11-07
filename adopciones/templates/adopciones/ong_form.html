@@ -1,0 +1,15 @@
+{% extends 'adopciones/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2>Formulario ONG</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn btn-success">Guardar</button>
+      <a class="btn btn-secondary" href="{% url 'ong_list' %}">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
+

@@ -3,8 +3,8 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .forms import RegistroForm, PersonaForm, MascotaForm, AdopcionForm
-from .models import Persona, Mascota, Adopcion
+from .forms import RegistroForm, PersonaForm, MascotaForm, AdopcionForm, ONGForm
+from .models import Persona, Mascota, Adopcion, ONG
 import os
 from django.db.models import Count
 from django.http import HttpResponse
@@ -71,6 +71,44 @@ def persona_delete(request, id):
     messages.success(request, "Persona eliminada correctamente.")
     return redirect('persona_list')
 
+@login_required
+def ong_list(request):
+    ongs = ONG.objects.all()
+    return render(request, 'adopciones/ong_list.html', {'ongs': ongs})
+
+
+@login_required
+def ong_create(request):
+    if request.method == 'POST':
+        form = ONGForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "ONG registrada correctamente.")
+            return redirect('ong_list')
+    else:
+        form = ONGForm()
+    return render(request, 'adopciones/ong_form.html', {'form': form})
+
+@login_required
+def ong_update(request, id):
+    ong = get_object_or_404(ONG, id=id)
+    if request.method == 'POST':
+        form = ONGForm(request.POST, instance=ong)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "ONG actualizada correctamente.")
+            return redirect('ong_list')
+    else:
+        form = ONGForm(instance=ong)
+    return render(request, 'adopciones/ong_form.html', {'form': form})
+
+@login_required
+def ong_delete(request, id):
+    ong = get_object_or_404(ONG, id=id)
+    ong.delete()
+    messages.success(request, "ONG eliminada correctamente.")
+    return redirect('ong_list')
+
 
 
 @login_required
@@ -121,6 +159,7 @@ def mascota_delete(request, id):
 def adopcion_list(request):
     adopciones = Adopcion.objects.select_related('persona', 'mascota').all()
     return render(request, 'adopciones/adopcion_list.html', {'adopciones': adopciones})
+    
 
 @login_required
 def adopcion_create(request):

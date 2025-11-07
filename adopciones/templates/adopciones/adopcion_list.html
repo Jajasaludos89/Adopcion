@@ -1,22 +1,47 @@
 {% extends 'adopciones/base.html' %}
 {% block content %}
-<h1>Adopciones</h1>
-<a class="btn btn-primary mb-3" href="{% url 'adopcion_create' %}">Nueva</a>
-<table class="table table-striped">
-  <thead><tr><th>Persona</th><th>Mascota</th><th>Fecha</th><th>Acciones</th></tr></thead>
-  <tbody>
-    {% for a in adopciones %}
-    <tr>
-      <td>{{ a.persona }}</td>
-      <td>{{ a.mascota }}</td>
-      <td>{{ a.fecha_adopcion }}</td>
-      <td>
-        <a class="btn btn-sm btn-danger" href="{% url 'adopcion_delete' a.id %}">Eliminar</a>
-      </td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="4">No hay adopciones.</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-primary mb-0">Gestión de Adopciones</h2>
+    <a class="btn btn-primary shadow-sm px-4" href="{% url 'adopcion_create' %}">
+      <i class="bi bi-plus-circle me-1"></i> Nueva Adopción
+    </a>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
+      <table class="table table-hover align-middle text-center">
+        <thead class="table-primary">
+          <tr>
+            <th>Persona</th>
+            <th>Mascota</th>
+            <th>Fecha de Adopción</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in adopciones %}
+          <tr>
+            <td class="fw-semibold">{{ a.persona }}</td>
+            <td>{{ a.mascota }}</td>
+            <td>{{ a.fecha_adopcion|date:"d/m/Y" }}</td>
+            <td>
+              <a class="btn btn-sm btn-outline-danger shadow-sm" href="{% url 'adopcion_delete' a.id %}">
+                <i class="bi bi-trash"></i> Eliminar
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="text-muted py-4">No hay adopciones registradas.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Iconos de Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 {% endblock %}
