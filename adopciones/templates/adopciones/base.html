@@ -1,145 +1,111 @@
-{% load static %}
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Gestión de Adopciones</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  {# === CSS principal (se mantiene tu Bootstrap original) === #}
+  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  {# === Fuentes y vendors opcionales (del segundo layout) === #}
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Poppins&family=Raleway&display=swap" rel="stylesheet">
-  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
-  {# === Font Awesome (si lo usas en iconos) === #}
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous" />
+  <style>
+    body {
+      background-color: #f5f6fa;
+      font-family: "Segoe UI", sans-serif;
+    }
 
-  {# === DataTables + Buttons (si tienes tablas con exportación) === #}
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
+    .navbar {
+      border-bottom: 2px solid #dee2e6;
+    }
 
-  {# === Bootstrap Fileinput === #}
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+    .navbar-brand {
+      font-weight: 600;
+      color: #0d6efd !important;
+    }
 
-  {# === SweetAlert2 === #}
-  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+    .card {
+      border: none;
+      border-radius: 1rem;
+    }
 
-  {# === Tu CSS principal (si lo tienes) === #}
-  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+    .btn-link.nav-link {
+      color: #0d6efd;
+      font-weight: 500;
+    }
 
-  {# === Hook para estilos por página === #}
-  {% block extra_css %}{% endblock %}
+    .btn-link.nav-link:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      background-color: #fff;
+      border-top: 1px solid #dee2e6;
+      padding: 1rem;
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #6c757d;
+    }
+  </style>
 </head>
-<body class="bg-light">
-
-  <!-- ====== NAVBAR (se mantiene exactamente tu estructura) ====== -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+<body>
+  <!-- 🔹 Barra de navegación -->
+  <nav class="navbar navbar-expand-lg bg-white shadow-sm">
     <div class="container">
-      <a class="navbar-brand" href="{% url 'persona_list' %}">Gestión de Adopciones</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-              aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="navbar-brand" href="{% url 'persona_list' %}">
+        <i class="bi bi-house-heart"></i> Gestión de Adopciones
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="mainNav">
+      <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'mascota_list' %}">Mascotas</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'adopcion_list' %}">Adopciones</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'reportes' %}">Reportes</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'persona_list' %}"><i class="bi bi-people"></i> Personas</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'mascota_list' %}"><i class="bi bi-paw"></i> Mascotas</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'adopcion_list' %}"><i class="bi bi-heart"></i> Adopciones</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'reportes' %}"><i class="bi bi-bar-chart"></i> Reportes</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'ong_list' %}"><i class="bi bi-building"></i> ONGs</a></li>
             <li class="nav-item">
               <form action="{% url 'logout' %}" method="post" style="display:inline;">
                 {% csrf_token %}
-                <button type="submit" class="nav-link btn btn-link" style="text-decoration:none;">Salir</button>
+                <button type="submit" class="btn btn-link nav-link"><i class="bi bi-box-arrow-right"></i> Salir</button>
               </form>
             </li>
           {% else %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Ingresar</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'registro' %}">Registro</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}"><i class="bi bi-box-arrow-in-right"></i> Ingresar</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'registro' %}"><i class="bi bi-person-plus"></i> Registro</a></li>
           {% endif %}
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- ====== CONTENIDO ====== -->
-  <div class="container py-4">
-
-    {# Mensajes nativos (se conservan) #}
+  <!-- 🔹 Contenido -->
+  <main class="container py-5">
     {% if messages %}
       {% for m in messages %}
-        <div class="alert alert-{{ m.tags }} mb-3">{{ m }}</div>
+        <div class="alert alert-{{ m.tags }} alert-dismissible fade show" role="alert">
+          {{ m }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
       {% endfor %}
     {% endif %}
 
-    {# Bloque de contenido (se conserva el nombre original) #}
     {% block content %}{% endblock %}
-  </div>
+  </main>
 
-  {# ====== Footer opcional (traído del segundo layout, puedes quitar si no lo usas) ====== #}
-  <footer id="footer" class="footer border-top bg-white">
-    <div class="container py-3 small text-center text-muted">
-      <div class="copyright">
-        © <span>Copyright</span> <strong class="px-1">Gestión de Adopciones</strong> <span>Todos los derechos reservados</span>
-      </div>
-      <div class="credits">
-        Diseñado con Bootstrap 5
-      </div>
-    </div>
+  <!-- 🔹 Footer -->
+  <footer>
+    © {{ now|date:"Y" }} Sistema de Gestión de Adopciones | Desarrollado por ZaiKret y Javier
   </footer>
 
-  {# ====== Scroll Top opcional ====== #}
-  <a href="#" id="scroll-top" class="position-fixed bottom-0 end-0 m-3 btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width:44px;height:44px;">
-    <i class="bi bi-arrow-up-short fs-4"></i>
-  </a>
-
-  {# ====== JS (orden correcto para evitar conflictos) ====== #}
-  <!-- jQuery primero (necesario para Validate, DataTables, fileinput) -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
-
-  <!-- Bootstrap Bundle (mantiene tu versión 5.3) -->
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- jQuery Validate -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.min.js"></script>
-
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <!-- DataTables + Buttons -->
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-
-  <!-- Bootstrap Fileinput -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap-fileinput/js/fileinput.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap-fileinput/js/locales/es.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap-fileinput/themes/fa/theme.min.js"></script>
-
-  <!-- Vendors opcionales (del segundo layout) -->
-  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
-  <script src="{% static 'assets/vendor/typed.js/typed.umd.js' %}"></script>
-  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
-  <script src="{% static 'assets/vendor/waypoints/noframework.waypoints.js' %}"></script>
-  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
-
-  <!-- Tu JS principal -->
-  <script src="{% static 'assets/js/main.js' %}"></script>
-  {% endif %}
 </body>
 </html>
