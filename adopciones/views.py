@@ -4,8 +4,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import RegistroForm, PersonaForm, MascotaForm, AdopcionForm
-from .models import Persona, Mascota, Adopcion
-import os
+from .models import Persona, Mascota, Adopcion, Organizacion
 from django.db.models import Count
 from django.http import HttpResponse
 import pandas as pd
@@ -15,6 +14,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
+import os
 
 
 
@@ -96,7 +96,7 @@ def mascota_update(request, id):
     if request.method == 'POST':
         form = MascotaForm(request.POST, request.FILES, instance=mascota)
         if form.is_valid():
-            # Eliminar foto anterior si se sube una nueva
+           
             if 'foto' in request.FILES and mascota.foto:
                 if os.path.isfile(mascota.foto.path):
                     os.remove(mascota.foto.path)
@@ -139,7 +139,7 @@ def adopcion_create(request):
 @login_required
 def adopcion_delete(request, id):
     adopcion = get_object_or_404(Adopcion, id=id)
-    # Liberar la mascota al eliminar la adopción
+
     adopcion.mascota.adoptada = False
     adopcion.mascota.save()
     adopcion.delete()
@@ -152,7 +152,6 @@ def adopcion_delete(request, id):
 def reportes(request):
     total_adopciones = Adopcion.objects.count()
 
-    # Agrupación por especie
     especies = (
         Mascota.objects
         .values_list('especie')
@@ -216,3 +215,67 @@ def reportes(request):
         'labels': labels,
         'data': data
     })
+
+# Lista de Organizaciones
+
+def listarOrganizacion(request):
+    organizaciones = Organizacion.objects.all()
+    return render(request, "adopciones/organizacion/listarorganiza.html", {
+        'organizaciones': organizaciones
+    })
+
+def nuevaOrganizacion(request):
+    return render(request, "adopciones/organizacion/nuevoorganiza.html")
+
+def guardarOrganizacion(request):
+    nombre = request.POST["nombre"]
+    ruc = request.POST["ruc"]
+    direccion = request.POST["direccion"]
+    telefono = request.POST.get("telefono", "")
+    correo = request.POST.get("correo", "")
+    representante = request.POST.get("representante", "")
+
+    Organizacion.objects.create(
+        nombre=nombre,
+        ruc=ruc,
+        direccion=direccion,
+        telefono=telefono,
+        correo=correo,
+        representante=representante
+    )
+
+    messages.success(request, "La organización ha sido GUARDADA correctamente")
+    return redirect('/listarOrganizacion')
+
+def eliminarOrganizacion(request, id):
+    organizacion = Organizacion.objects.get(id=id)
+    organizacion.delete()
+    messages.success(request, "La organización ha sido ELIMINADA correctamente")
+    return redirect('/listarOrganizacion')
+
+def editarOrganizacion(request, id):
+    organizacion = Organizacion.objects.get(id=id)
+    return render(request, "adopciones/organizacion/editarorganiza.html", {
+        'organizacion': organizacion
+    })
+
+def procesarEdicionOrganizacion(request):
+    id = request.POST["id"]
+    nombre = request.POST["nombre"]
+    ruc = request.POST["ruc"]
+    direccion = request.POST["direccion"]
+    telefono = request.POST.get("telefono", "")
+    correo = request.POST.get("correo", "")
+    representante = request.POST.get("representante", "")
+
+    organizacion = Organizacion.objects.get(id=id)
+    organizacion.nombre = nombre
+    organizacion.ruc = ruc
+    organizacion.direccion = direccion
+    organizacion.telefono = telefono
+    organizacion.correo = correo
+    organizacion.representante = representante
+
+    organizacion.save()
+    messages.success(request, "La organización ha sido ACTUALIZADA exitosamente")
+    return redirect('/listarOrganizacion')

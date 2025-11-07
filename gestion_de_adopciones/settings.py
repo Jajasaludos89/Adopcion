@@ -54,8 +54,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'gestion_adopciones',
         'USER': 'postgres',
-        'PASSWORD': '1',
-        'HOST': 'localhost',
+        'PASSWORD': 'root',        
+        'HOST': 'localhost', 
         'PORT': '5432',
     }
 }

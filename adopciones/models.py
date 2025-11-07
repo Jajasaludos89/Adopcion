@@ -26,3 +26,11 @@ class Adopcion(models.Model):
     fecha_adopcion = models.DateField()
     observaciones = models.TextField(blank=True, null=True)
     def __str__(self): return f"{self.persona} - {self.mascota} - {self.fecha_adopcion}"
+
+class Organizacion(models.Model):
+    nombre = models.CharField(max_length=150)
+    ruc = models.CharField(max_length=13, unique=True)
+    direccion = models.TextField()
+    telefono = models.CharField(max_length=20, blank=True, null=True)
+    correo = models.CharField(max_length=100, blank=True, null=True)
+    representante = models.CharField(max_length=100, blank=True, null=True)
