@@ -1,0 +1,22 @@
+{% extends 'adopciones/base.html' %}
+{% block content %}
+<h1>Adopciones</h1>
+<a class="btn btn-primary mb-3" href="{% url 'adopcion_create' %}">Nueva</a>
+<table class="table table-striped">
+  <thead><tr><th>Persona</th><th>Mascota</th><th>Fecha</th><th>Acciones</th></tr></thead>
+  <tbody>
+    {% for a in adopciones %}
+    <tr>
+      <td>{{ a.persona }}</td>
+      <td>{{ a.mascota }}</td>
+      <td>{{ a.fecha_adopcion }}</td>
+      <td>
+        <a class="btn btn-sm btn-danger" href="{% url 'adopcion_delete' a.id %}">Eliminar</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No hay adopciones.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'adopciones/base.html' %}
+{% block content %}
+<h1>Personas</h1>
+<a class="btn btn-primary mb-3" href="{% url 'persona_create' %}">Nueva</a>
+<table class="table table-striped">
+  <thead><tr><th>Nombre</th><th>Cédula</th><th>Acciones</th></tr></thead>
+  <tbody>
+    {% for p in personas %}
+    <tr>
+      <td>{{ p.nombre }} {{ p.apellido }}</td>
+      <td>{{ p.cedula }}</td>
+      <td>
+        <a class="btn btn-sm btn-secondary" href="{% url 'persona_update' p.id %}">Editar</a>
+        <a class="btn btn-sm btn-danger" href="{% url 'persona_delete' p.id %}">Eliminar</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">No hay personas.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

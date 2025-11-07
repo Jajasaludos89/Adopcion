@@ -1,0 +1,71 @@
+{% extends 'adopciones/base.html' %}
+{% block content %}
+<div class="container py-3">
+  <div class="card shadow-sm border-0 p-3 mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="mb-0"><i class="bi bi-graph-up"></i> Reporte General</h4>
+      <div>
+        <a href="?excel=1" class="btn btn-success btn-sm me-2">
+          <i class="bi bi-file-earmark-excel"></i> Excel
+        </a>
+        <a href="?pdf=1" class="btn btn-danger btn-sm">
+          <i class="bi bi-file-earmark-pdf"></i> PDF
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="card text-center border-0 shadow-sm p-3">
+        <h6 class="text-muted">Total Adopciones</h6>
+        <h2 class="text-success">{{ total_adopciones }}</h2>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm p-3">
+        <canvas id="graficoEspecies" height="100"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-4 border-0 shadow-sm p-3">
+    <h5> Detalle por Especie</h5>
+    <table class="table table-hover align-middle">
+      <thead class="table-light"><tr><th>Especie</th><th>Total</th></tr></thead>
+      <tbody>
+        {% for e in especies %}
+        <tr><td>{{ e.0 }}</td><td>{{ e.1 }}</td></tr>
+        {% empty %}
+        <tr><td colspan="2">Sin datos</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('graficoEspecies');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+            label: 'Adopciones por Especie',
+            data: {{ data|safe }},
+            borderWidth: 1,
+            backgroundColor: 'rgba(54, 162, 235, 0.5)'
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+</script>
+{% endblock %}
