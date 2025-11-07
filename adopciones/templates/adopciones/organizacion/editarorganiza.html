@@ -1,0 +1,117 @@
+{% extends './plantilla.html' %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-3"></div>
+
+  <div class="col-md-6 bg-light p-4">
+    <h2>Editar Organización</h2>
+
+    <form id="formOrganizacion" action="/organizaciones/procesarEdicion/" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="id" value="{{ organizacion.id }}">
+
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input
+          type="text" class="form-control" name="nombre" id="nombre"
+          required minlength="3" maxlength="150"
+          placeholder="Nombre de la organización"
+          value="{{ organizacion.nombre }}">
+      </div>
+
+      <div class="mb-3">
+        <label for="ruc" class="form-label">RUC</label>
+        <input
+          type="text" class="form-control" name="ruc" id="ruc"
+          required maxlength="13"
+          placeholder="13 dígitos"
+          value="{{ organizacion.ruc }}">
+      </div>
+
+      <div class="mb-3">
+        <label for="direccion" class="form-label">Dirección</label>
+        <textarea
+          class="form-control" name="direccion" id="direccion"
+          required rows="3" placeholder="Dirección completa">{{ organizacion.direccion }}</textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="telefono" class="form-label">Teléfono</label>
+        <input
+          type="text" class="form-control" name="telefono" id="telefono"
+          maxlength="20" placeholder="Opcional"
+          value="{{ organizacion.telefono }}">
+      </div>
+
+      <div class="mb-3">
+        <label for="correo" class="form-label">Correo</label>
+        <input
+          type="email" class="form-control" name="correo" id="correo"
+          maxlength="100" placeholder="Opcional"
+          value="{{ organizacion.correo }}">
+      </div>
+
+      <div class="mb-3">
+        <label for="representante" class="form-label">Representante</label>
+        <input
+          type="text" class="form-control" name="representante" id="representante"
+          maxlength="100" placeholder="Opcional"
+          value="{{ organizacion.representante }}">
+      </div>
+
+      <button class="btn btn-success" type="submit">Guardar</button>
+      <a class="btn btn-secondary" href="/organizaciones/">Cancelar</a>
+    </form>
+  </div>
+
+  <div class="col-md-3"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  $(document).ready(function () {
+    $("#formOrganizacion").validate({
+      rules: {
+        nombre:      { required: true, minlength: 3, maxlength: 150 },
+        ruc:         { required: true, digits: true, minlength: 13, maxlength: 13 },
+        direccion:   { required: true, minlength: 5 },
+        telefono:    { digits: true, minlength: 7, maxlength: 15 },
+        correo:      { email: true, maxlength: 100 },
+        representante:{ minlength: 3, maxlength: 100 }
+      },
+      messages: {
+        nombre: {
+          required: "Ingrese el nombre",
+          minlength: "Debe tener al menos 3 caracteres",
+          maxlength: "No debe exceder 150 caracteres"
+        },
+        ruc: {
+          required: "Ingrese el RUC",
+          digits: "Solo números",
+          minlength: "El RUC debe tener 13 dígitos",
+          maxlength: "El RUC debe tener 13 dígitos"
+        },
+        direccion: {
+          required: "Ingrese la dirección",
+          minlength: "Debe tener al menos 5 caracteres"
+        },
+        telefono: {
+          digits: "Solo números",
+          minlength: "Mínimo 7 dígitos",
+          maxlength: "Máximo 15 dígitos"
+        },
+        correo: {
+          email: "Ingrese un correo válido",
+          maxlength: "Máximo 100 caracteres"
+        },
+        representante: {
+          minlength: "Mínimo 3 caracteres",
+          maxlength: "Máximo 100 caracteres"
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}
